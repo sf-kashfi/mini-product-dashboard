@@ -27,7 +27,7 @@ interface ShopProductCardProps {
 }
 
 export default function ShopProductCard({ product }: ShopProductCardProps) {
-    const { id, title, image, price } = product;
+    const { id, title, image, price, rating, category } = product;
 
     const linkTo = `product/${id}`;
 
@@ -44,9 +44,17 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
                     </Typography>
                 </Link>
 
+                <Typography variant="body2" color="text.secondary">
+                    {category}
+                </Typography>
+
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
 
-                    <Stack direction="row" spacing={0.5}>
+                    <Typography variant="body2" color="text.secondary">
+                        ⭐ {rating.rate} ({rating.count})
+                    </Typography>
+
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
                         <Typography variant="subtitle1">{fCurrency(price)}</Typography>
                     </Stack>
                 </Stack>
