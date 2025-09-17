@@ -27,9 +27,9 @@ interface ShopProductCardProps {
 }
 
 export default function ShopProductCard({ product }: ShopProductCardProps) {
-    const { title, image, price } = product;
+    const { id, title, image, price } = product;
 
-    const linkTo = `shop/product/${title}`;
+    const linkTo = `product/${id}`;
 
     return (
         <Card>

@@ -16,6 +16,7 @@ const Loadable = <P extends object>(Component: ComponentType<P>) => {
 const Home = Loadable(lazy(() => import("../pages/Home")));
 const About = Loadable(lazy(() => import("../pages/About")));
 const Shop = Loadable(lazy(() => import("../pages/Shop")));
+const ProductDetails = Loadable(lazy(() => import("../pages/ProductDetails")));
 //
 
 export default function Router() {
@@ -27,6 +28,7 @@ export default function Router() {
                 { index: true, element: <Home /> },
                 { path: "about", element: <About /> },
                 { path: "shop", element: <Shop /> },
+                { path: 'shop/product/:id', element: <ProductDetails /> },
             ],
         },
     ]);
