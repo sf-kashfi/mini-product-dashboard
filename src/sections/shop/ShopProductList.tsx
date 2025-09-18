@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import ShopProductCard from './ShopProductCard';
 
-
+// ----------------------------------------------------------------------
 interface Product {
     id: number;
     title: string;
@@ -20,6 +20,7 @@ interface ShopProductListProps {
     products: Product[];
     loading?: boolean;
 }
+// ----------------------------------------------------------------------
 
 export default function ShopProductList({ products, loading = false }: ShopProductListProps) {
     return (

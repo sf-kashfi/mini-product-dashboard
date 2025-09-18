@@ -6,10 +6,7 @@ import { Box, Card, Grid, Divider, Container, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '../redux/store';
 import { getProduct } from '../redux/slices/product';
 
-
-
 // ----------------------------------------------------------------------
-
 interface Product {
     id: number;
     title: string;
@@ -28,14 +25,6 @@ interface Checkout {
     cart: Product[];
 }
 
-interface RootState {
-    product: {
-        product: Product | null;
-        error: boolean;
-        checkout: Checkout;
-    };
-}
-
 // ----------------------------------------------------------------------
 
 export default function ProductDetails() {
@@ -43,7 +32,7 @@ export default function ProductDetails() {
 
     console.log('idd', useParams())
     const { id = '' } = useParams<{ id: string }>();
-    const { product, error } = useSelector((state: RootState) => state.product);
+    const { product, error } = useSelector((state) => state.product);
 
     useEffect(() => {
         if (id) {

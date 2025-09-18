@@ -25,6 +25,7 @@ interface Product {
 interface ShopProductCardProps {
     product: Product;
 }
+// ----------------------------------------------------------------------
 
 export default function ShopProductCard({ product }: ShopProductCardProps) {
     const { id, title, image, price, rating, category } = product;

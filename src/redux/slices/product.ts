@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import sum from 'lodash/sum';
-import uniqBy from 'lodash/uniqBy';
 import axios from 'axios';
 import { dispatch } from '../store';
 
@@ -23,18 +21,7 @@ interface Product {
 
 interface Filters {
     category: string;
-    priceRange: string;
-    rating: string;
-}
-
-interface Checkout {
-    activeStep: number;
-    cart: Product[];
-    subtotal: number;
-    total: number;
-    discount: number;
-    shipping: number;
-    billing: any;
+    search?: string;
 }
 
 interface ProductState {
@@ -44,7 +31,6 @@ interface ProductState {
     product: Product | null;
     sortBy: string | null;
     filters: Filters;
-    checkout: Checkout;
 }
 
 // ---------------- Initial State ----------------
@@ -57,17 +43,6 @@ const initialState: ProductState = {
     sortBy: null,
     filters: {
         category: 'All',
-        priceRange: '',
-        rating: '',
-    },
-    checkout: {
-        activeStep: 0,
-        cart: [],
-        subtotal: 0,
-        total: 0,
-        discount: 0,
-        shipping: 0,
-        billing: null,
     },
 };
 
@@ -96,45 +71,12 @@ const slice = createSlice({
             state.sortBy = action.payload;
         },
         filterProducts(state, action: PayloadAction<Partial<Filters>>) {
-            state.filters.category = action.payload.category || 'All';
-            state.filters.priceRange = action.payload.priceRange || '';
-            state.filters.rating = action.payload.rating || '';
-        },
-
-        getCart(state, action: PayloadAction<Product[]>) {
-            const cart = action.payload;
-            const subtotal = sum(cart.map((item) => item.price * (item.quantity || 1)));
-            const discount = cart.length === 0 ? 0 : state.checkout.discount;
-            const shipping = cart.length === 0 ? 0 : state.checkout.shipping;
-            const billing = cart.length === 0 ? null : state.checkout.billing;
-
-            state.checkout.cart = cart;
-            state.checkout.subtotal = subtotal;
-            state.checkout.total = subtotal - discount;
-            state.checkout.discount = discount;
-            state.checkout.shipping = shipping;
-            state.checkout.billing = billing;
-        },
-        addCart(state, action: PayloadAction<Product>) {
-            const product = action.payload;
-            const isEmptyCart = state.checkout.cart.length === 0;
-
-            if (isEmptyCart) {
-                state.checkout.cart = [product];
-            } else {
-                state.checkout.cart = state.checkout.cart.map((_product) =>
-                    _product.id === product.id
-                        ? { ..._product, quantity: (_product.quantity || 1) + 1 }
-                        : _product
-                );
-                state.checkout.cart = uniqBy([...state.checkout.cart, product], 'id');
+            if (action.payload.category !== undefined) {
+                state.filters.category = action.payload.category;
             }
-        },
-        deleteCart(state, action: PayloadAction<number>) {
-            state.checkout.cart = state.checkout.cart.filter((item) => item.id !== action.payload);
-        },
-        resetCart(state) {
-            state.checkout = { ...initialState.checkout };
+            if (action.payload.search !== undefined) {
+                state.filters.search = action.payload.search;
+            }
         },
     },
 });
@@ -143,7 +85,7 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-export const { getCart, addCart, resetCart, deleteCart, sortByProducts, filterProducts } = slice.actions;
+export const { sortByProducts, filterProducts } = slice.actions;
 
 // ---------------- Async thunk ----------------
 export function getProducts() {

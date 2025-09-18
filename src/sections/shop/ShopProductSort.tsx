@@ -16,24 +16,18 @@ type SortByOption = {
 };
 
 const SORT_BY_OPTIONS: SortByOption[] = [
-    { value: 'featured', label: 'Featured' },
-    { value: 'newest', label: 'Newest' },
     { value: 'priceDesc', label: 'Price: High-Low' },
     { value: 'priceAsc', label: 'Price: Low-High' },
 ];
 
 const renderLabel = (label: string | null) => {
     switch (label) {
-        case 'featured':
-            return 'Featured';
-        case 'newest':
-            return 'Newest';
         case 'priceDesc':
             return 'Price: High-Low';
         case 'priceAsc':
             return 'Price: Low-High';
         default:
-            return 'Featured';
+            return '';
     }
 };
 
