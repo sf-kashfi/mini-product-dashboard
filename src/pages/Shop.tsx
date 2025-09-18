@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from '../redux/store';
 import { getProducts, filterProducts } from '../redux/slices/product';
 // sections
 import { ShopProductSort, ShopProductList, ShopProductCategory } from '../sections/shop';
+//hooks
+import { useAveragePrice } from '../hooks/useAveragePrice';
+import { useFilteredProducts } from '../hooks/useFilteredProducts';
 
 // ----------------------------------------------------------------------
 interface Product {
@@ -39,12 +42,8 @@ export default function Shop() {
 
   const { products = [], sortBy, filters = {} as Filters } = useSelector((state) => state.product);
 
-  const filteredProducts = applyFilter(products, sortBy, filters);
-
-  const averagePrice =
-    filteredProducts.length > 0
-      ? (filteredProducts.reduce((sum, p) => sum + p.price, 0) / filteredProducts.length).toFixed(2)
-      : null;
+  const filteredProducts = useFilteredProducts(products, sortBy, filters);
+  const averagePrice = useAveragePrice(filteredProducts);
 
   useEffect(() => {
     dispatch(getProducts());
@@ -82,27 +81,4 @@ export default function Shop() {
       <ShopProductList products={filteredProducts} loading={!products.length} />
     </Container>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applyFilter(products: Product[] = [], sortBy: string | null, filters: Filters): Product[] {
-  let filtered = [...products];
-
-  // SORT BY
-  if (sortBy === 'priceDesc') filtered = orderBy(filtered, ['price'], ['desc']);
-  if (sortBy === 'priceAsc') filtered = orderBy(filtered, ['price'], ['asc']);
-
-  // FILTER PRODUCTS BY CATEGORY
-  if (filters.category && filters.category !== 'All') {
-    filtered = filtered.filter((p) => p.category === filters.category);
-  }
-
-  // FILTER PRODUCTS BY SEARCH
-  if (filters.search) {
-    const searchLower = filters.search.toLowerCase();
-    filtered = filtered.filter((p) => p.title.toLowerCase().includes(searchLower));
-  }
-
-  return filtered;
 }

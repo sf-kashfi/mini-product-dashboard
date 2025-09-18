@@ -21,10 +21,6 @@ interface Product {
     quantity?: number;
 }
 
-interface Checkout {
-    cart: Product[];
-}
-
 // ----------------------------------------------------------------------
 
 export default function ProductDetails() {
